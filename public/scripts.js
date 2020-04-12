@@ -47,28 +47,24 @@ var material = new THREE.MeshBasicMaterial( { map: texture } );
 var mtlLoader = new THREE.MTLLoader();
 mtlLoader.setTexturePath('/assets/');
 mtlLoader.setPath('/assets/');
-mtlLoader.load('r2-d2.mtl', function (materials) {
 
-    materials.preload();
 
-    var objLoader = new THREE.OBJLoader();
-    objLoader.setMaterials(materials);
-    objLoader.se
-    objLoader.setPath('/assets/');
-    objLoader.load('egg.obj', function (object) {
+var objLoader = new THREE.OBJLoader();
 
-        // For any meshes in the model, add our material.
-        object.traverse( function ( node ) {
+objLoader.setPath('/assets/');
+objLoader.load('egg.obj', function (object) {
 
-            if ( node.isMesh ) node.material = material;
+    // For any meshes in the model, add our material.
+    object.traverse( function ( node ) {
 
-        } );
-        scene.add(object);
-        object.position.y -= 60;
+        if ( node.isMesh ) node.material = material;
 
-    });
+    } );
+    scene.add(object);
+    object.position.y -= 60;
 
 });
+
 
 var animate = function () {
 	requestAnimationFrame( animate );
