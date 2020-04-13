@@ -32,39 +32,53 @@ var geometry = new THREE.SphereBufferGeometry( 500, 60, 40 );
 // invert the geometry on the x-axis so that all of the faces point inward
 geometry.scale( - 1, 1, 1 );
 
-var texture = new THREE.TextureLoader().load( 'assets/5Q1A1755_8_Panorama.jpg' );
-var material = new THREE.MeshBasicMaterial( { map: texture } );
+var panorama = new THREE.TextureLoader()
+panorama.load( 
+    'assets/5Q1A1755_8_Panorama.jpg',
+    // onLoad callback
+	function ( texture ) {
+		// in this example we create the material when the texture is loaded
+		var material = new THREE.MeshBasicMaterial( {
+			map: texture
+        } );
+         
+        mesh = new THREE.Mesh( geometry, material );
 
-mesh = new THREE.Mesh( geometry, material );
+        scene.add( mesh );
 
-scene.add( mesh );
+        var texture = new THREE.TextureLoader().load( 'assets/jimmy_texture.jpg' );
 
-var texture = new THREE.TextureLoader().load( 'assets/jimmy_texture.jpg' );
+        // immediately use the texture for material creation
+        var material = new THREE.MeshBasicMaterial( { map: texture } );
 
-// immediately use the texture for material creation
-var material = new THREE.MeshBasicMaterial( { map: texture } );
-
-var mtlLoader = new THREE.MTLLoader();
-mtlLoader.setTexturePath('/assets/');
-mtlLoader.setPath('/assets/');
+        var mtlLoader = new THREE.MTLLoader();
+        mtlLoader.setTexturePath('/assets/');
+        mtlLoader.setPath('/assets/');
 
 
-var objLoader = new THREE.OBJLoader();
+        var objLoader = new THREE.OBJLoader();
 
-objLoader.setPath('/assets/');
-objLoader.load('egg.obj', function (object) {
+        objLoader.setPath('/assets/');
+        objLoader.load('egg.obj', function (object) {
 
-    // For any meshes in the model, add our material.
-    object.traverse( function ( node ) {
+            // For any meshes in the model, add our material.
+            object.traverse( function ( node ) {
 
-        if ( node.isMesh ) node.material = material;
+                if ( node.isMesh ) node.material = material;
+                scene.add(object);
+                object.position.y -= 30;
+            } );
+        });
+	},
 
-    } );
-    scene.add(object);
-    object.position.y -= 60;
+	// onProgress callback currently not supported
+	undefined,
 
-});
-
+	// onError callback
+	function ( err ) {
+		console.error( 'An error happened.' );
+	} 
+);
 
 var animate = function () {
 	requestAnimationFrame( animate );
