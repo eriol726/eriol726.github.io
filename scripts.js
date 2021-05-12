@@ -24,6 +24,7 @@ backLight.position.set(100, 0, -100).normalize();
 var ambientLight = new THREE.AmbientLight( 0xffffff );
 scene.add( ambientLight );
 
+
 //scene.add(keyLight);
 //scene.add(fillLight);
 //scene.add(backLight);
