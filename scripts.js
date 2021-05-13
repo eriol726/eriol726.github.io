@@ -47,7 +47,7 @@ panorama.load(
 
         scene.add( mesh );
 
-        var texture = new THREE.TextureLoader().load( 'assets/jimmy_texture.jpg' );
+        var texture = new THREE.TextureLoader().load( 'assets/fabric_texture.jpg' );
 
         // immediately use the texture for material creation
         var material = new THREE.MeshBasicMaterial( { map: texture } );
