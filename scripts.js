@@ -49,27 +49,28 @@ panorama.load(
 
         var texture = new THREE.TextureLoader().load( 'assets/fabric_texture.jpg' );
 
-        // immediately use the texture for material creation
-        var material = new THREE.MeshBasicMaterial( { map: texture } );
+		var mtlLoader = new THREE.MTLLoader();
+		mtlLoader.setBaseUrl( '/assets/' );
+		mtlLoader.setPath( '/assets/' );
+		var url = "egg.mtl";
+		mtlLoader.load( url, function( materials ) {
 
-        var mtlLoader = new THREE.MTLLoader();
-        mtlLoader.setTexturePath('/assets/');
-        mtlLoader.setPath('/assets/');
+			materials.preload();
 
+			var objLoader = new THREE.OBJLoader();
+			objLoader.setMaterials( materials );
+			objLoader.setPath( '/assets/' );
+			objLoader.load( 'egg.obj', function ( object ) {
 
-        var objLoader = new THREE.OBJLoader();
+				object.position.y = - 0;
+				scene.add( object );
 
-        objLoader.setPath('/assets/');
-        objLoader.load('egg.obj', function (object) {
+			}, function ( loading ) {
+				console.log( 'Loading obj done ', );
+			},  undefined );
 
-            // For any meshes in the model, add our material.
-            object.traverse( function ( node ) {
+		});
 
-                if ( node.isMesh ) node.material = material;
-                scene.add(object);
-                object.position.y -= 30;
-            } );
-        });
 	},
 
 	// onProgress callback currently not supported
@@ -77,7 +78,7 @@ panorama.load(
 
 	// onError callback
 	function ( err ) {
-		console.error( 'An error happened.' );
+		console.error( 'An error happened.', err );
 	} 
 );
 
